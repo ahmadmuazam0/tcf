@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,10 +10,13 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap"
+        rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
     <!-- Navigation Bar -->
@@ -46,7 +50,8 @@
                 <span>Total:</span>
                 <span id="cart-total-price">Rs. 0</span>
             </div>
-            <a href="checkout.html" class="btn-primary checkout-btn" id="checkout-btn" style="display: none;">Proceed to Checkout</a>
+            <a href="checkout.html" class="btn-primary checkout-btn" id="checkout-btn" style="display: none;">Proceed to
+                Checkout</a>
         </div>
     </div>
 
@@ -84,7 +89,8 @@
                             <h3>Payment Method</h3>
                             <div class="payment-methods">
                                 <label class="payment-option">
-                                    <input type="radio" name="payment" value="cod" checked onchange="togglePaymentDetails()">
+                                    <input type="radio" name="payment" value="cod" checked
+                                        onchange="togglePaymentDetails()">
                                     <span>Cash on Delivery (COD)</span>
                                 </label>
                                 <label class="payment-option">
@@ -92,11 +98,13 @@
                                     <span>Bank Transfer</span>
                                 </label>
                                 <label class="payment-option">
-                                    <input type="radio" name="payment" value="jazzcash" onchange="togglePaymentDetails()">
+                                    <input type="radio" name="payment" value="jazzcash"
+                                        onchange="togglePaymentDetails()">
                                     <span>JazzCash</span>
                                 </label>
                                 <label class="payment-option">
-                                    <input type="radio" name="payment" value="easypaisa" onchange="togglePaymentDetails()">
+                                    <input type="radio" name="payment" value="easypaisa"
+                                        onchange="togglePaymentDetails()">
                                     <span>EasyPaisa</span>
                                 </label>
                             </div>
@@ -106,7 +114,8 @@
                                 <p id="instruction-text"></p>
                             </div>
 
-                            <button type="submit" class="btn-primary btn-block" style="margin-top: 2rem;">Place Order</button>
+                            <button type="submit" class="btn-primary btn-block" style="margin-top: 2rem;">Place
+                                Order</button>
                         </form>
                     </div>
 
@@ -177,16 +186,48 @@
             const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
-            // ✅ Client-side order confirmation (no server needed for GitHub Pages)
+            // --- Build the WhatsApp message with full order details ---
+            const paymentLabels = {
+                cod: 'Cash on Delivery (COD)',
+                bank: 'Bank Transfer',
+                jazzcash: 'JazzCash',
+                easypaisa: 'EasyPaisa'
+            };
+
+            let itemLines = '';
+            cart.forEach(item => {
+                itemLines += `  • ${item.name} x${item.quantity} — Rs. ${item.price * item.quantity}\n`;
+            });
+
+            const message =
+                `🛒 *New Order — The Core Four*\n` +
+                `━━━━━━━━━━━━━━━━━━━\n` +
+                `👤 *Customer:* ${name}\n` +
+                `📞 *Phone:* ${phone}\n` +
+                `📍 *Address:* ${address}, ${city}\n` +
+                `━━━━━━━━━━━━━━━━━━━\n` +
+                `🧾 *Items Ordered:*\n${itemLines}` +
+                `━━━━━━━━━━━━━━━━━━━\n` +
+                `💰 *Total:* Rs. ${total}\n` +
+                `💳 *Payment:* ${paymentLabels[paymentMethod] || paymentMethod}\n` +
+                `━━━━━━━━━━━━━━━━━━━\n` +
+                `Please confirm and arrange delivery. Thank you! 🙏`;
+
+            // Open WhatsApp with pre-filled message (customer clicks Send)
+            const waNumber = '923067567796'; // Your WhatsApp number (no + sign)
+            const waURL = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
+            window.open(waURL, '_blank');
+
+            // Show confirmation to customer
             alert(
                 `✅ Order Placed Successfully!\n\n` +
-                `Thank you, ${name}!\n` +
-                `We have received your order (Total: Rs. ${total}).\n\n` +
-                `📦 Our team will contact you at ${phone} to confirm delivery to ${city}.\n\n` +
-                `Payment: ${paymentMethod.toUpperCase()}`
+                `Thank you, ${name}! WhatsApp has opened with your order details.\n` +
+                `Please click *Send* in WhatsApp to confirm your order.\n\n` +
+                `📦 Total: Rs. ${total}\n` +
+                `We will contact you at ${phone} to arrange delivery to ${city}.`
             );
 
-            // Clear cart and go back to home
+            // Clear cart and return to home
             cart = [];
             saveCart();
             window.location.href = 'index.html';
@@ -194,4 +235,5 @@
     </script>
 
 </body>
+
 </html>
