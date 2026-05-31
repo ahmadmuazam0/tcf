@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}Checkout - The Core Four{% endblock %}
+
+{% block content %}
+<section class="checkout-section">
+    <div class="checkout-container">
+        <h2>Complete Your Order</h2>
+        <div class="checkout-grid">
+            
+            <!-- Left Side: Form -->
+            <div class="checkout-form-container">
+                <form id="checkout-form" onsubmit="submitOrder(event)">
+                    
+                    <h3>Shipping Details</h3>
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Delivery Address</label>
+                        <textarea id="address" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input type="text" id="city" required>
+                    </div>
+
+                    <h3>Payment Method</h3>
+                    <div class="payment-methods">
+                        <label class="payment-option">
+                            <input type="radio" name="payment" value="cod" checked onchange="togglePaymentDetails()">
+                            <span>Cash on Delivery (COD)</span>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="payment" value="bank" onchange="togglePaymentDetails()">
+                            <span>Bank Transfer</span>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="payment" value="jazzcash" onchange="togglePaymentDetails()">
+                            <span>JazzCash</span>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="payment" value="easypaisa" onchange="togglePaymentDetails()">
+                            <span>EasyPaisa</span>
+                        </label>
+                    </div>
+
+                    <!-- Payment Instructions (Shown based on selection) -->
+                    <div id="payment-instructions" class="payment-instructions" style="display: none;">
+                        <p id="instruction-text"></p>
+                    </div>
+
+                    <button type="submit" class="btn-primary btn-block" style="margin-top: 2rem;">Place Order</button>
+                </form>
+            </div>
+
+            <!-- Right Side: Order Summary -->
+            <div class="order-summary-container">
+                <h3>Order Summary</h3>
+                <div id="checkout-cart-items" class="checkout-items">
+                    <!-- Javascript will load items here -->
+                </div>
+                <div class="checkout-total">
+                    <span>Total Amount:</span>
+                    <span id="checkout-total-price">Rs. 0</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Load cart data on the checkout page
+    document.addEventListener('DOMContentLoaded', () => {
+        updateCheckoutSummary();
+    });
+
+    function togglePaymentDetails() {
+        const method = document.querySelector('input[name="payment"]:checked').value;
+        const instructionDiv = document.getElementById('payment-instructions');
+        const textElement = document.getElementById('instruction-text');
+        
+        instructionDiv.style.display = 'block';
+        
+        if (method === 'cod') {
+            instructionDiv.style.display = 'none';
+        } else if (method === 'bank') {
+            textElement.innerHTML = "<strong>Bank Transfer Details:</strong><br>Bank: ABC Bank<br>Account Title: The Core Four<br>Account Number: 1234567890<br><em>Please pay the exact amount. We will call to confirm.</em>";
+        } else if (method === 'jazzcash') {
+            textElement.innerHTML = "<strong>JazzCash Details:</strong><br>Account Title: The Core Four<br>Account Number: 0300-1234567<br><em>Please pay the exact amount. We will call to confirm.</em>";
+        } else if (method === 'easypaisa') {
+            textElement.innerHTML = "<strong>EasyPaisa Details:</strong><br>Account Title: The Core Four<br>Account Number: 0345-1234567<br><em>Please pay the exact amount. We will call to confirm.</em>";
+        }
+    }
+
+    async function submitOrder(e) {
+        e.preventDefault();
+        
+        // Check if cart is empty
+        if (cart.length === 0) {
+            alert("Your cart is empty!");
+            return;
+        }
+
+        const orderData = {
+            name: document.getElementById('name').value,
+            phone: document.getElementById('phone').value,
+            address: document.getElementById('address').value,
+            city: document.getElementById('city').value,
+            payment_method: document.querySelector('input[name="payment"]:checked').value,
+            items: cart,
+            total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+        };
+
+        try {
+            const response = await fetch('/checkout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(orderData)
+            });
+            
+            const result = await response.json();
+            
+            if (result.status === 'success') {
+                alert("Order placed successfully! We will contact you soon.");
+                // Clear cart
+                cart = [];
+                saveCart();
+                window.location.href = '/'; // Go back to home
+            }
+        } catch (error) {
+            alert("There was an error placing your order. Please try again.");
+        }
+    }
+</script>
+{% endblock %}

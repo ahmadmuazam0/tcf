@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}The Core Four - Energy & Protein Bars{% endblock %}</title>
+    
+    <!-- Google Fonts for modern typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    
+    <!-- Our Custom Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="logo">The Core <span>Four</span></a>
+            <div class="nav-links">
+                <a href="/#about">About</a>
+                <a href="/#aim">Our Aim</a>
+                <a href="/#our-story">Our Story</a>
+                <a href="/#products">Products</a>
+                <a href="/#contact">Contact</a>
+            </div>
+            <div class="cart-icon" onclick="toggleCart()">
+                🛒 <span id="cart-count">0</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Shopping Cart Sidebar (Hidden by default) -->
+    <div id="cart-sidebar" class="cart-sidebar">
+        <div class="cart-header">
+            <h2>Your Cart</h2>
+            <button class="close-cart" onclick="toggleCart()">&times;</button>
+        </div>
+        <div id="cart-items" class="cart-items">
+            <!-- Items will be injected here by JavaScript -->
+            <p class="empty-cart-msg">Your cart is empty.</p>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cart-total-price">Rs. 0</span>
+            </div>
+            <a href="/checkout" class="btn-primary checkout-btn" id="checkout-btn" style="display: none;">Proceed to Checkout</a>
+        </div>
+    </div>
+    
+    <div id="cart-overlay" class="cart-overlay" onclick="toggleCart()"></div>
+
+    <!-- Main Content Area -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <h3>The Core Four</h3>
+            <p>Wholesome, delicious, and made with love.</p>
+            <p>&copy; 2026 The Core Four. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Our Custom JavaScript -->
+    <script src="{{ url_for('static', filename='cart.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
