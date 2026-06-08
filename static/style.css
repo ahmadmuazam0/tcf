@@ -157,7 +157,7 @@ h1, h2, h3 {
     align-items: center;
     justify-content: center;
     text-align: center;
-    background: linear-gradient(rgba(253, 251, 247, 0.3), rgba(253, 251, 247, 0.5)), url('/static/images/Welcome.jpg') center/cover;
+    background: linear-gradient(rgba(253, 251, 247, 0.55), rgba(253, 251, 247, 0.65)), url('/static/images/welcome pg 1.jpeg') center/cover;
     padding: 0 2rem;
 }
 
