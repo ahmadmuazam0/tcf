@@ -6,7 +6,7 @@ PRODUCTS = [
         "name": "PhytoCore Bar",
         "flavor": "Chocolate",
         "description": "Blend of Barley, Dates, Nuts, Seeds and chocolate. The combo contains all essential Amino Acids as well as healthy fats.",
-        "price": 300,  
+        "price": 200,  
         "nutrition": "210 kcal | 25.9g Carbs | 6.93g Protein | 4.48g Fiber",
         "image_url": "/static/images/Phytocore Bar.jpeg"
     },
@@ -15,7 +15,7 @@ PRODUCTS = [
         "name": "RTM NutriBoom",
         "weight": "100g",
         "description": "Rich chocolate and naturally sweet dates for a healthy boost.",
-        "price": 500,
+        "price": 450,
         "nutrition": "210 kcal | 10g Protein | 6g Fiber",
         "image_url": "/static/images/RTM NutriBoom.png"
     }
